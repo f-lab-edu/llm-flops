@@ -1,0 +1,28 @@
+{
+    "youtube_channels": [
+      {
+        "channel_name": "Tech With Tim",
+        "url": "https://www.youtube.com/c/TechWithTim"
+      },
+      {
+        "channel_name": "Sentdex",
+        "url": "https://www.youtube.com/c/sentdex"
+      },
+      {
+        "channel_name": "Corey Schafer",
+        "url": "https://www.youtube.com/c/Coreyms"
+      },
+      {
+        "channel_name": "Traversy Media",
+        "url": "https://www.youtube.com/c/TraversyMedia"
+      },
+      {
+        "channel_name": "Kalle Hallden",
+        "url": "https://www.youtube.com/c/KalleHallden"
+      },
+      {
+        "channel_name": "The Coding Train",
+        "url": "https://www.youtube.com/c/TheCodingTrain"
+      }
+    ]
+  }
