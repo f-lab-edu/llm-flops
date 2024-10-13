@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "llm-mlops"
+version = "0.1.0"
+description = ""
+authors = ["tmdqja75 <tmdqja75@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+langchain-huggingface = "^0.1.0"
+langchain-community = "^0.3.2"
+langchain = "^0.3.3"
+python-dotenv = "^1.0.1"
+jupyter = "^1.1.1"
+widgetsnbextension = "^4.0.13"
+selenium = "^4.25.0"
+webdriver-manager = "^4.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
