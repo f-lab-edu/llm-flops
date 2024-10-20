@@ -18,7 +18,7 @@ chrome_options.add_argument("--no-sandbox")
 
 class WebsiteDataCrawler:
     def __init__(self):
-        self.driver = webdriver.Chrome(options=chrome_options)
+        # self.driver = webdriver.Chrome(options=chrome_options)
         pass
 
     def get_all_hrefs(self, url: str):
@@ -36,24 +36,24 @@ class WebsiteDataCrawler:
 
         return hrefs
 
-    def get_openai_suburls(self, n_recent=30):
-        url = f"https://openai.com/news/?limit={n_recent}"
-        openai_url_list = list()
-        try:
-            self.driver.get(url)
+    # def get_openai_suburls(self, n_recent=30):
+    #     url = f"https://openai.com/news/?limit={n_recent}"
+    #     openai_url_list = list()
+    #     try:
+    #         self.driver.get(url)
 
-            # Wait for JavaScript to load (you may need to adjust the sleep duration or use explicit waits)
-            time.sleep(2)  # Time to allow JavaScript to execute
+    #         # Wait for JavaScript to load (you may need to adjust the sleep duration or use explicit waits)
+    #         time.sleep(2)  # Time to allow JavaScript to execute
 
-            # Find all <a> tags
-            links = self.driver.find_elements(By.TAG_NAME, "a")
-            for link in links:
-                link_dir = link.get_attribute("href")
-                if "/index/" in link_dir:
-                    openai_url_list.append(link_dir)
-        finally:
-            # Quit the driver
-            self.driver.quit()
+    #         # Find all <a> tags
+    #         links = self.driver.find_elements(By.TAG_NAME, "a")
+    #         for link in links:
+    #             link_dir = link.get_attribute("href")
+    #             if "/index/" in link_dir:
+    #                 openai_url_list.append(link_dir)
+    #     finally:
+    #         # Quit the driver
+    #         self.driver.quit()
 
         return list(set(openai_url_list))
 
@@ -95,12 +95,12 @@ class WebsiteDataCrawler:
 
     def get_all_docs(self):
         # 모든 문서 서브 URL을 통해 문서 목록 가져오기
-        openai = self.get_openai_suburls()
+        # openai = self.get_openai_suburls()
         anthropic = self.get_anthropic_suburls()
         ncsoft = self.get_ncsoft_suburls()
         naver = self.get_naver_suburls()
 
-        total_list_suburl = openai + anthropic + ncsoft + naver
+        total_list_suburl = anthropic + ncsoft + naver
 
         loader = WebBaseLoader(total_list_suburl)
         docs = loader.load()
