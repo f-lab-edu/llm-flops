@@ -2,7 +2,8 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
-from langchain_community.document_loaders import WebBaseLoader, AsyncHtmlLoader
+from langchain_community.document_loaders import WebBaseLoader
+from langchain_core.documents import Document
 from dotenv import load_dotenv
 
 from selenium import webdriver
@@ -33,7 +34,7 @@ class WebsiteDataCrawler:
         self.driver = webdriver.Firefox(options=chrome_options)
         pass
 
-    def get_all_hrefs(self, url: str) -> list:
+    def get_all_hrefs(self, url: str) -> list[str]:
         """
         주어진 URL에서 <a>태그에 있는 모든 href를 크롤링하여 반환합니다.
 
@@ -57,7 +58,7 @@ class WebsiteDataCrawler:
 
         return hrefs
 
-    def get_anthropic_suburls(self) -> list:
+    def get_anthropic_suburls(self) -> list[str]:
         """
         Anthropic 뉴스 페이지에서 모든 게시물의 URL을 가져옵니다.
 
@@ -73,7 +74,7 @@ class WebsiteDataCrawler:
         ]
         return list(set(news_hrefs))
 
-    def get_ncsoft_suburls(self) -> list:
+    def get_ncsoft_suburls(self) -> list[str]:
         """
         NCSoft 블로그 페이지에서 모든 게시물의 URL을 가져옵니다.
 
@@ -90,7 +91,7 @@ class WebsiteDataCrawler:
         ]
         return filtered_paths
 
-    def get_naver_suburls(self) -> list:
+    def get_naver_suburls(self) -> list[str]:
         """
         Naver Tech Blog에서 모든 게시물의 URL을 가져옵니다.
 
@@ -108,7 +109,7 @@ class WebsiteDataCrawler:
         ]
         return filtered_path
 
-    def get_all_docs(self) -> list:
+    def get_all_docs(self) -> list[Document]:
         """
         지정된 회사들 (OpenAI, Anthropic, NCSoft, Naver) 웹사이트에서 모든 문서를 가져옵니다.
 
