@@ -164,6 +164,11 @@ class WebsiteDataCrawler:
 '''
 
 if __name__ == "__main__":
+    """
+    WebsiteDataCrawler를 초기화 한 후 생성된 클래스로 Anthropic, NCSoft, Naver 기술블로그에서 블로그 콘텐츠 크롤링
+
+    usage: python -m app.data_collection.blog_data
+    """
     website_data = WebsiteDataCrawler()
     site_list = website_data.get_all_docs()
 
