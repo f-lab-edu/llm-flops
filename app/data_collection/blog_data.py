@@ -1,13 +1,17 @@
+import os
 import re
 import requests
 from bs4 import BeautifulSoup
 from langchain_community.document_loaders import WebBaseLoader, AsyncHtmlLoader
+from dotenv import load_dotenv
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 import time
+
+load_dotenv()
 
 # 크롤링을 할 때 사용하는 크롬 브라우저의 설정을 정의합니다.
 chrome_options = Options()
@@ -60,7 +64,7 @@ class WebsiteDataCrawler:
         Returns:
             list: 모든 뉴스 게시물의 URL을 포함한 리스트를 반환합니다.
         """
-        url = "https://www.anthropic.com/news"
+        url = os.getenv("ANTHROPIC_MAIN_WEBSITE")
         site_href_list = self.get_all_hrefs(url)
         news_hrefs = [
             url + href.replace("/news", "")
@@ -76,7 +80,7 @@ class WebsiteDataCrawler:
         Returns:
             list: 모든 블로그 게시물의 URL을 포함한 리스트를 반환합니다.
         """
-        url = "https://ncsoft.github.io/ncresearch/blogs/"
+        url = os.getenv("NCSOFT_MAIN_WEBSITE")
         site_href_list = self.get_all_hrefs(url)
         pattern = re.compile(r"^/ncresearch/[a-fA-F0-9]{40}$")
         filtered_paths = [
@@ -93,7 +97,7 @@ class WebsiteDataCrawler:
         Returns:
             list: 모든 게시물의 URL을 포함한 리스트를 반환합니다.
         """
-        url = "https://clova.ai/tech-blog"
+        url = os.getenv("NAVER_MAIN_WEBSITE")
         site_href_list = list(set(self.get_all_hrefs(url)))
         filtered_path = [
             url.replace("/tech-blog", "") + path
