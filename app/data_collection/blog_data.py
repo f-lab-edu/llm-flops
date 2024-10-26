@@ -81,9 +81,12 @@ class WebsiteDataCrawler:
         Returns:
             list: 모든 블로그 게시물의 URL을 포함한 리스트를 반환합니다.
         """
+        parse_pattern1 = r"^/ncresearch/[a-fA-F0-9]{40}$"
         url = os.getenv("NCSOFT_MAIN_WEBSITE")
+
         site_href_list = self.get_all_hrefs(url)
-        pattern = re.compile(r"^/ncresearch/[a-fA-F0-9]{40}$")
+        pattern = re.compile(parse_pattern1)
+
         filtered_paths = [
             url.replace("/ncresearch/blogs/", "") + path
             for path in site_href_list
