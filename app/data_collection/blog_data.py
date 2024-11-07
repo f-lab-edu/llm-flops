@@ -14,14 +14,6 @@ import time
 
 load_dotenv()
 
-# 크롤링을 할 때 사용하는 크롬 브라우저의 설정을 정의합니다.
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # 브라우저를 헤드리스 모드로 실행합니다.
-chrome_options.add_argument("--disable-gpu")  # GPU를 사용하지 않도록 설정합니다.
-chrome_options.add_argument(
-    "--no-sandbox"
-)  # 샌드박스 모드를 사용하지 않도록 설정합니다.
-
 
 class WebsiteDataCrawler:
     """Naver, NCSoft, Anthropic 블로그 사이트에서 블로그 콘텐츠를 크롤링해오는 클래스입니다
@@ -31,8 +23,29 @@ class WebsiteDataCrawler:
     """
 
     def __init__(self):
-        self.driver = webdriver.Firefox(options=chrome_options)
+        self.driver = webdriver.Firefox(
+            options=WebsiteDataCrawler.get_default_options()
+        )
         pass
+
+    @staticmethod
+    def get_default_options() -> Options:
+        """크롤링에 사용될 브라우저 관련 옵션 세팅들을 초기화합니다
+
+        Returns:
+            Options: firefox 브라우저 옵션들
+        """
+        firefox_options = Options()
+        firefox_options.add_argument(
+            "--headless"
+        )  # 브라우저를 헤드리스 모드로 실행합니다.
+        firefox_options.add_argument(
+            "--disable-gpu"
+        )  # GPU를 사용하지 않도록 설정합니다.
+        firefox_options.add_argument(
+            "--no-sandbox"
+        )  # 샌드박스 모드를 사용하지 않도록 설정합니다.
+        return firefox_options
 
     def get_all_hrefs(self, url: str) -> list[str]:
         """
