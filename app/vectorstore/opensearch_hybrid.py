@@ -116,11 +116,14 @@ class OpenSearchHybridSearch:
         """검색 결과를 파싱하여 데이터프레임으로 반환합니다.
 
         Args:
-            result (dict): 검색 결과 데이터.
-            similarity_type (str): 유사성 평가 방법 (예: BM25, cosine).
+            result (dict): 검색 결과 데이터
 
         Returns:
             pd.DataFrame: 파싱된 결과의 데이터프레임.
+                - 'url' (str): document의 url
+                - 'text' (str): document 텍스트
+                - 'title' (str): document 제목
+                - 'BM25_score' 또는 'cosine_score' (float): query와 document간의 bm_25 또는 cosine score
         """
         parsed_result = list()
         # 검색 결과에서 각 문서의 정보 추출
@@ -209,8 +212,6 @@ class OpenSearchHybridSearch:
 
         return df_rrf
 
-
-# def vectorstore_hybrid_search():
 
 
 if __name__ == "__main__":
