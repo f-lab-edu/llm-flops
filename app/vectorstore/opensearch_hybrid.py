@@ -70,7 +70,12 @@ class OpenSearchHybridSearch:
     def _reciprocal_rank_fusion(
         self, result_df_list: List[pd.DataFrame], k: int = 60
     ) -> pd.DataFrame:
-        """Reciprocal Rank Fusion 알고리즘을 사용하여 결과를 결합합니다.
+        """Reciprocal Rank Fusion(RRF) 알고리즘을 사용하여 결과를 결합합니다.
+        Reciprocal Rank Fusion (RRF)은 여러 검색 엔진의 결과를 결합하여 상위 순위의 문서에 더 높은 가중치를 부여하는 집계 기법입니다. 
+        각 결과의 순위에 대해 역순위(1/(rank+k))를 계산하고 이를 합산하여 최종 순위를 결정합니다.
+        RRF 알고리즘에 대한 자세한 셜명은 다음 링크를 참조해주세요.
+        ENG: https://learn.microsoft.com/en-us/azure/search/hybrid-search-ranking
+        KOR: https://learn.microsoft.com/ko-kr/azure/search/hybrid-search-ranking
 
         Args:
             result_df_list (List[pd.DataFrame]): 검색 결과의 데이터프레임 리스트.
