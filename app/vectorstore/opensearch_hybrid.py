@@ -21,6 +21,7 @@ OPENSEARCH_PORT = os.getenv("OPENSEARCH_PORT")
 OPENSEARCH_BLOG_DATA_INDEX = os.getenv("OPENSEARCH_BLOG_DATA_INDEX")
 HUGGINGFACE_EMBEDDING_MODEL = os.getenv("HUGGINGFACE_EMBEDDING_MODEL")
 
+
 class OpenSearchHybridSearch:
     def __init__(
         self,
@@ -38,8 +39,6 @@ class OpenSearchHybridSearch:
             host (str): OpenSearch 호스트 주소.
             port (str): OpenSearch 포트 번호.
         """
-        # HuggingFace를 사용하여 임베딩 모델 설정
-        self.embeddings = HuggingFaceEmbeddings(model_name=HUGGINGFACE_EMBEDDING_MODEL)
 
         # OpenSearch HTTP 인증 정보 설정
         self.opensearch_http_auth = (user, pw)
@@ -53,6 +52,10 @@ class OpenSearchHybridSearch:
         )
         # OpenSearch URL 구성
         self.openserach_url = f"https://{host}:{port}"
+
+        # HuggingFace를 사용하여 임베딩 모델 설정
+        self.embeddings = HuggingFaceEmbeddings(model_name=HUGGINGFACE_EMBEDDING_MODEL)
+
         # OpenSearch 벡터 스토어 초기화
         self.vector_store = OpenSearchVectorSearch(
             index_name=OPENSEARCH_BLOG_DATA_INDEX,
@@ -200,6 +203,7 @@ class OpenSearchHybridSearch:
         df_rrf = df_rrf.iloc[:top_k, :]
 
         return df_rrf
+
 
 # def vectorstore_hybrid_search():
 
