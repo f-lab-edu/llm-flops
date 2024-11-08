@@ -15,29 +15,28 @@ import pandas as pd
 
 load_dotenv(override=True)
 
-OPENSEARCH_USER = os.getenv("OPENSEARCH_USER")
+
 OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST")
 OPENSEARCH_PORT = os.getenv("OPENSEARCH_PORT")
-OPENSEARCH_PW = os.getenv("OPENSEARCH_INITIAL_ADMIN_PASSWORD")
 OPENSEARCH_BLOG_DATA_INDEX = os.getenv("OPENSEARCH_BLOG_DATA_INDEX")
 HUGGINGFACE_EMBEDDING_MODEL = os.getenv("HUGGINGFACE_EMBEDDING_MODEL")
 
 class OpenSearchHybridSearch:
     def __init__(
         self,
+        user: str,
+        pw: str,
         host: str = OPENSEARCH_HOST,
         port: str = OPENSEARCH_PORT,
-        user: str = OPENSEARCH_USER,
-        pw: str = OPENSEARCH_PW,
     ):
         """초기화 메서드
         OpenSearchHybridSearch 클래스의 인스턴스를 초기화합니다.
 
         Args:
-            host (str): OpenSearch 호스트 주소.
-            port (str): OpenSearch 포트 번호.
             user (str): OpenSearch 사용자 이름.
             pw (str): OpenSearch 비밀번호.
+            host (str): OpenSearch 호스트 주소.
+            port (str): OpenSearch 포트 번호.
         """
         # HuggingFace를 사용하여 임베딩 모델 설정
         self.embeddings = HuggingFaceEmbeddings(model_name=HUGGINGFACE_EMBEDDING_MODEL)
