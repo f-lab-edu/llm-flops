@@ -1,5 +1,5 @@
 import os
-import sys
+import logging
 from typing import List
 from langchain.docstore.document import Document
 
@@ -149,7 +149,12 @@ class OpenSearchHybridSearch:
             doc_list (List[Document]): 삽입할 문서 목록.
         """
         # 문서를 벡터 스토어에 삽입
-        self.vector_store.add_documents(doc_list)
+        try:
+            logging.info(f"Inserting {len(doc_list)} document(s)...")
+            self.vector_store.add_documents(doc_list)
+            logging.info(f"Finished inserting {len(doc_list)}")
+        except:
+            logging.warning(f"Error during document insertion!")
 
     def hybrid_search(self, query: str, top_k: int = 10) -> pd.DataFrame:
         """하이브리드 검색을 수행합니다.
