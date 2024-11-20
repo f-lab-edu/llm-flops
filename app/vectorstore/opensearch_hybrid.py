@@ -13,7 +13,7 @@ from opensearchpy import OpenSearch, RequestsHttpConnection
 
 import pandas as pd
 
-load_dotenv(override=True)
+load_dotenv()
 
 
 OPENSEARCH_HOST = os.getenv("OPENSEARCH_HOST")
