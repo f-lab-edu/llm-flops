@@ -113,7 +113,19 @@ class OpenSearchHybridSearch:
         """검색 결과를 파싱하여 데이터프레임으로 반환합니다.
 
         Args:
-            result (dict): 검색 결과 데이터
+            result (dict): 검색 결과 데이터로, 다음과 같은 구조를 가집니다.
+                - 'hits' (dict): 검색된 문서들의 정보.
+                    - 'hits' (list): 각 문서의 상세 정보 리스트.
+                        - 각 문서는 다음과 같은 구조를 가집니다.
+                            - '_index' (str): 문서가 속한 인덱스 이름.
+                            - '_id' (str): 문서의 고유 ID.
+                            - '_score' (float): 문서의 점수.
+                            - '_source' (dict): 문서의 실제 데이터.
+                                - 'metadata' (dict): 문서의 메타데이터
+                                    - 'title' (str): 문서의 제목
+                                - 'text' (str): 문서의 내용.
+            similarity_type (str): 유사도 계산 방식의 유형으로, 'BM25' 또는 'cosine' 중 하나를 지정합니다.
+
 
         Returns:
             pd.DataFrame: 파싱된 결과의 데이터프레임.
