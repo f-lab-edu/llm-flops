@@ -1,17 +1,14 @@
-import os
 import logging
+import os
 from typing import List
-from langchain.docstore.document import Document
-
-from dotenv import load_dotenv, find_dotenv
-
-from langchain_community.vectorstores import OpenSearchVectorSearch
-from langchain_openai import OpenAIEmbeddings
-from langchain_huggingface import HuggingFaceEmbeddings
-
-from opensearchpy import OpenSearch, RequestsHttpConnection
 
 import pandas as pd
+from dotenv import find_dotenv, load_dotenv
+from langchain.docstore.document import Document
+from langchain_community.vectorstores import OpenSearchVectorSearch
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_openai import OpenAIEmbeddings
+from opensearchpy import OpenSearch, RequestsHttpConnection
 
 load_dotenv()
 
@@ -155,6 +152,57 @@ class OpenSearchHybridSearch:
             logging.info(f"Finished inserting {len(doc_list)}")
         except:
             logging.warning(f"Error during document insertion!")
+
+    def search_docs(self, query: str, search_param_query_dict: dict, similarity_type: str='BM25'):
+        query_embedding = list(self.embeddings.embed_query(query))
+        # OpenSearch를 사용한 search 수행
+        search_result = self.client.search(
+            body=search_param_query_dict, index=OPENSEARCH_BLOG_DATA_INDEX
+        )
+        # 검색 결과 파싱
+        df_result = self.parse_search_result(
+            syntactic_search_result, similarity_type=similarity_type
+        )
+
+        return df_result
+
+    def bm25_search(self, query: str, top_k: int=10) -> pd.DataFrame:
+
+
+        syntactic_search_query = {
+            "size": top_k * 2,
+            "query": {"match": {"text_entry": query}},
+        }
+        df_syntactic = self.search_docs(query, syntactic_search_query, similarity_type='BM25')
+
+        return df_syntactic
+
+    def cosine_similarity_search(self, query: str, top_k: int=10) -> pd.DataFrame:
+
+
+        # semantic search 검색 쿼리 구성
+        semantic_search_query = {
+            "size": top_k * 2,
+            "query": {
+                "script_score": {
+                    "query": {"match_all": {}},
+                    "script": {
+                        "source": "knn_score",
+                        "lang": "knn",
+                        "params": {
+                            "field": "vector_field",
+                            "query_value": query_embedding,
+                            "space_type": "cosinesimil",
+                        },
+                    },
+                }
+            },
+        }
+        df_semantic = self.search_docs(query, semantic_search_query, similarity_type='cosine')
+
+        return df_syntactic
+
+        
 
     def hybrid_search(self, query: str, top_k: int = 10) -> pd.DataFrame:
         """하이브리드 검색을 수행합니다.
