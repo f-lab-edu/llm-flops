@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd app/embedding_server
 
 BENTO_TAG=$(bentoml build --output tag)
 BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" | awk -F':' '{print $2":"$3}')
@@ -19,7 +20,7 @@ else
 fi
 
 # Bento build한 후 생성된 container로 embedding API를 시작합니다
-docker run -it --rm -p 3000:3000 $BENTO_CONTAINER_TAG serve
+# docker run -it --rm -p 3000:3000 $BENTO_CONTAINER_TAG serve
 
 
 
