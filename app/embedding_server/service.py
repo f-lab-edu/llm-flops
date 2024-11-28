@@ -23,17 +23,26 @@ class SentenceEmbeddingService:
         )
 
     @bentoml.api
-    def embed(self, sentences: Union[str, list]) -> np.ndarray:
-        """Input 문장을 embedding 모델로 embed하는 API 함수
+    def multiple_embed(self, sentences: list[str]) -> np.ndarray:
+        """list에 담긴 각 sentence를 embedding 모델로 embed하는 API 함수
 
         Args:
-            sentences (Union[str, list]): Embedding하고자 하는 input 문장/문단
+            sentences (list[str]): Embedding하고자 하는 input 문장/문단이 담긴 list
 
         Returns:
-            np.ndarray: embedding 결과
-                - sentences가 str이면 (embed_dim, ) shape의 ndarray 반환
-                - sentences가 list면 (len(sentences), embed_dim) shape의 ndarray 반환
+            np.ndarray: embedding 결과 [(len(sentences), embed_dim) shape의 ndarray 반환]
         """
         embeddings = self.embedding_model.encode(sentences)
 
         return embeddings
+
+    def embed(self, sentences: str) -> np.ndarray:
+        """string input 문장을 embedding 모델로 embed하는 API 함수
+
+        Args:
+            sentences (str): Embedding하고자 하는 input 문장/문단
+
+        Returns:
+            np.ndarray: embedding 결과 [(embed_dim, ) shape의 ndarray 반환]
+        """
+        embeddings = self.embedding_model.encode(sentences)
