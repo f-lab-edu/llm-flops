@@ -10,6 +10,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import OpenAIEmbeddings
 from opensearchpy import OpenSearch, RequestsHttpConnection
 
+from langchain_community.document_loaders import WebBaseLoader
+
 load_dotenv()
 
 
@@ -163,35 +165,60 @@ class OpenSearchHybridSearch:
             self.vector_store.add_documents(doc_list)
             logging.info(f"Finished inserting {len(doc_list)}")
         except:
+            print(e)
             logging.warning(f"Error during document insertion!")
 
     def search_docs(self, query: str, search_param_query_dict: dict, similarity_type: str='BM25'):
-        query_embedding = list(self.embeddings.embed_query(query))
+        # query_embedding = list(self.embeddings.embed_query(query))
         # OpenSearch를 사용한 search 수행
         search_result = self.client.search(
             body=search_param_query_dict, index=OPENSEARCH_BLOG_DATA_INDEX
         )
         # 검색 결과 파싱
         df_result = self.parse_search_result(
-            syntactic_search_result, similarity_type=similarity_type
+            search_result, similarity_type=similarity_type
         )
 
         return df_result
 
     def bm25_search(self, query: str, top_k: int=10) -> pd.DataFrame:
+        """OpenSearch vector database에서 Okapi BM25 알고리즘을 사용하여 유사 documents들을 검색합니다.
+        BM25 알고리즘 설명: https://simonezz.tistory.com/41
 
+        Args:
+            query (str): 검색할 쿼리 문자열
+            top_k (int, optional): 조회할 상위 문서 갯수 기본값: 10.
 
+        Returns:
+            pd.DataFrame: 최종 BM25 검색 결과
+                - url(str): 문서 url
+                - text(str): 문서 내용
+                - title(str): 문서 제목
+                - BM25_score(float): 문서와 쿼리 간 BM25 점수
+        """
         syntactic_search_query = {
             "size": top_k * 2,
-            "query": {"match": {"text_entry": query}},
+            "query": {"match": {"text": query}},
         }
         df_syntactic = self.search_docs(query, syntactic_search_query, similarity_type='BM25')
 
         return df_syntactic
 
     def cosine_similarity_search(self, query: str, top_k: int=10) -> pd.DataFrame:
+        """OpenSearch vector database에서 cosine similarity를 사용하여 유사 documents들을 검색합니다.
 
+        Args:
+            query (str): 검색할 쿼리 문자열
+            top_k (int, optional): 조회할 상위 문서 갯수 기본값: 10.
 
+        Returns:
+            pd.DataFrame: 최종 BM25 검색 결과
+                - url(str): 문서 url
+                - text(str): 문서 내용
+                - title(str): 문서 제목
+                - cosine_score(float): 문서와 쿼리 간 cosine similarity 점수
+        """
+        query_embedding = list(self.embeddings.embed_query(query))
         # semantic search 검색 쿼리 구성
         semantic_search_query = {
             "size": top_k * 2,
@@ -210,9 +237,10 @@ class OpenSearchHybridSearch:
                 }
             },
         }
+
         df_semantic = self.search_docs(query, semantic_search_query, similarity_type='cosine')
 
-        return df_syntactic
+        return df_semantic
 
         
 
@@ -280,10 +308,10 @@ class OpenSearchHybridSearch:
 
 
 if __name__ == "__main__":
+    vector_store_obj = OpenSearchHybridSearch(user='admin', pw='Open-search1!')
 
-    vector_store_obj = OpenSearchHybridSearch()
     # q = "What is anthropic working on?"
-    q = "ncsoft에서 최근에 어떤 기술들을 연구하고 있어?"
-    res = vector_store_obj.hybrid_search(q)
+    q = """ncsoft에서 어떤 연구를 발표했어?"""
+    res = vector_store_obj.bm25_search(q)
 
     print(res)
