@@ -164,9 +164,12 @@ class OpenSearchHybridSearch:
             logging.info(f"Inserting {len(doc_list)} document(s)...")
             self.vector_store.add_documents(doc_list)
             logging.info(f"Finished inserting {len(doc_list)}")
-        except:
-            print(e)
+            return True
+        except NotImplementedError as e:
             logging.warning(f"Error during document insertion!")
+            return False
+            
+            
 
     def search_docs(self, query: str, search_param_query_dict: dict, similarity_type: str='BM25'):
         # query_embedding = list(self.embeddings.embed_query(query))
