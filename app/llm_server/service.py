@@ -1,7 +1,10 @@
 import os
 import bentoml
 import torch
+import logging
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field
+
 
 load_dotenv()
 # Bentoml 서버 로깅 설정
@@ -9,10 +12,21 @@ bentoml_logger = logging.getLogger("bentoml")
 bentoml_logger.setLevel(logging.INFO)
 
 
+class LlmGennerationParams(BaseModel):
+    prompt: str = Field(
+        default="What is the tallest building in the world?", description="Prompt Text"
+    )
+    temperature: float = Field(
+        default=0.1, description="LLM Sampling Temperature (0-1)"
+    )
+
+
 # Define the BentoML Service
 @bentoml.service
 class LlmService:
     def __init__(self):
+        from transformers import AutoTokenizer, AutoModelForCausalLM
+
         # API 서버에 가용 가능한 GPU를 설정
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
@@ -38,8 +52,8 @@ class LlmService:
 
         bentoml_logger.info(f"""{os.getenv("LLM_MODEL")} loaded to {self.device}""")
 
-    @bentoml.api()
-    def generate(self, prompt: str, temperature: float) -> str:
+    @bentoml.api
+    def generate(self, params: LlmGennerationParams) -> str:
         """prompt를 입력받으면, __init__에서 설정한 tokenizer과 LLM 모델로 답변을 생성합니다
 
         Args:
@@ -49,9 +63,11 @@ class LlmService:
         Returns:
             str: LLM으로 생성된 prompt에 대한 답변
         """
+        prompt = params.prompt
+        temperature = params.temperature
+
         inputs = self.tokenizer(prompt, return_tensors="pt")
-        if torch.cuda.is_available():
-            inputs = {k: v.to("cuda") for k, v in inputs.items()}
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
 
         # Generate text
         with torch.no_grad():
