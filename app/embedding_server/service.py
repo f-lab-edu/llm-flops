@@ -3,6 +3,7 @@ import bentoml
 import numpy as np
 import time
 
+import torch
 from dotenv import load_dotenv
 from typing import Union
 
@@ -17,10 +18,23 @@ class SentenceEmbeddingService:
         """
         from sentence_transformers import SentenceTransformer
 
+        # API 서버에 가용 가능한 GPU를 설정
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+            # bentoml_logger.info("Using CUDA for inference.")
+
+        elif torch.backends.mps.is_available():
+            self.device = torch.device("mps")
+            # bentoml_logger.info("Using MPS (Apple Silicon) for inference.")
+        else:
+            # 사용 가능한 GPU가 없다면 cpu로 inference 대체
+            self.device = torch.device("cpu")
+            # bentoml_logger.info("Using CPU for inference.")
+
         # bentofile.yaml에 env 변수를 참조하여 특정 모델을 초기화합니다
         self.embedding_model = SentenceTransformer(
             os.getenv("EMBEDDING_MODEL"), trust_remote_code=True
-        )
+        ).to(self.device)
 
     @bentoml.api
     def multiple_embed(self, sentences: list[str]) -> np.ndarray:
@@ -32,10 +46,12 @@ class SentenceEmbeddingService:
         Returns:
             np.ndarray: embedding 결과 [(len(sentences), embed_dim) shape의 ndarray 반환]
         """
+        print(sentences)
         embeddings = self.embedding_model.encode(sentences)
 
         return embeddings
 
+    @bentoml.api
     def embed(self, sentences: str) -> np.ndarray:
         """string input 문장을 embedding 모델로 embed하는 API 함수
 
@@ -46,3 +62,5 @@ class SentenceEmbeddingService:
             np.ndarray: embedding 결과 [(embed_dim, ) shape의 ndarray 반환]
         """
         embeddings = self.embedding_model.encode(sentences)
+
+        return embeddings
