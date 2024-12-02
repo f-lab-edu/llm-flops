@@ -5,10 +5,16 @@ import time
 
 import torch
 from dotenv import load_dotenv
-from typing import Union
+from typing import List
+from pydantic import BaseModel, Field
 
 load_dotenv()
 
+class MultiStringInput(BaseModel):
+    sentences: List[str] = Field(description="List of multiple sentences to embed (in string type)")
+
+class SingleStringInput(BaseModel):
+    sentence: str = Field(description="A single sentences to embed (in string type)")
 
 @bentoml.service
 class SentenceEmbeddingService:
@@ -37,7 +43,7 @@ class SentenceEmbeddingService:
         ).to(self.device)
 
     @bentoml.api
-    def multiple_embed(self, sentences: list[str]) -> np.ndarray:
+    def multiple_embed(self, sentences: MultiStringInput) -> np.ndarray:
         """list에 담긴 각 sentence를 embedding 모델로 embed하는 API 함수
 
         Args:
@@ -46,21 +52,20 @@ class SentenceEmbeddingService:
         Returns:
             np.ndarray: embedding 결과 [(len(sentences), embed_dim) shape의 ndarray 반환]
         """
-        print(sentences)
-        embeddings = self.embedding_model.encode(sentences)
+        embeddings = self.embedding_model.encode(sentences.sentences)
 
         return embeddings
 
     @bentoml.api
-    def embed(self, sentences: str) -> np.ndarray:
+    def embed(self, sentence: SingleStringInput) -> np.ndarray:
         """string input 문장을 embedding 모델로 embed하는 API 함수
 
         Args:
-            sentences (str): Embedding하고자 하는 input 문장/문단
+            sentence (str): Embedding하고자 하는 input 문장/문단
 
         Returns:
             np.ndarray: embedding 결과 [(embed_dim, ) shape의 ndarray 반환]
         """
-        embeddings = self.embedding_model.encode(sentences)
+        embeddings = self.embedding_model.encode(sentence.sentence)
 
         return embeddings
