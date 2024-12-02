@@ -1,0 +1,16 @@
+service: 'service:LlmService'
+labels:
+  owner: sb-ha
+  project: llm-mlops
+include:
+  - service.py
+python:
+  packages:
+    - transformers
+    - python-dotenv
+    - torch
+envs:
+  - name: "LLM_MODEL"
+    value: "meta-llama/Llama-3.2-1B"
+  - name: "MAX_TOKENS"
+    value: 256
