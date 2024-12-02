@@ -4,6 +4,8 @@ cd app/embedding_server
 
 BENTO_TAG=$(bentoml build --output tag)
 BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" | awk -F':' '{print $2":"$3}')
+REPOSITORY_NAME=$(echo "$BENTO_CONTAINER_TAG" | cut -d':' -f1)
+echo $REPOSITORY_NAME
 
 # system이 MacOS인지 확인합니다
 if [[ "$(uname)" == "Darwin" ]]; then
@@ -19,8 +21,7 @@ else
     bentoml containerize $BENTO_CONTAINER_TAG
 fi
 
-# Bento build한 후 생성된 container로 embedding API를 시작합니다
-# docker run -it --rm -p 3000:3000 $BENTO_CONTAINER_TAG serve
+docker tag $BENTO_CONTAINER_TAG $REPOSITORY_NAME:latest
 
 
 
