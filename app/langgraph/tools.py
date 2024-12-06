@@ -2,21 +2,15 @@ import getpass
 import os
 import sys
 
-from langchain_core.tools import tool
 from langchain_community.tools import DuckDuckGoSearchRun
-
-# custom 패키지 import 위해 sys.path에 Parent directory 추가
-parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-sys.path.append(parent_dir)
-
-from vectorstore.opensearch_hybrid import OpenSearchHybridSearch
+from langchain_core.tools import tool
+from app.vectorstore.opensearch_hybrid import OpenSearchHybridSearch
 
 # tool에 필요한 class 초기화
 duckduckgo_search = DuckDuckGoSearchRun()
 
 opensearch_password = getpass.getpass("Enter your Opensearch password: ")
 opensearch = OpenSearchHybridSearch(user="admin", pw=opensearch_password)
-
 
 @tool(parse_docstring=True)
 def web_search(query: str):
@@ -53,3 +47,5 @@ def vectorstore_search(query: str, search_type: str = "hybrid"):
     result["text"].tolist()
 
     return result
+
+

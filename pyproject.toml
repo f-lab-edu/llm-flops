@@ -4,6 +4,7 @@ version = "0.0.0"
 description = "ML/DL 관련 지식과 최신 정보관련 대화할 수 있는 챗봇"
 authors = ["tmdqja75 <tmdqja75@gmail.com>"]
 readme = "README.md"
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
