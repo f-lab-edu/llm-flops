@@ -4,6 +4,7 @@ version = "0.0.0"
 description = "ML/DL 관련 지식과 최신 정보관련 대화할 수 있는 챗봇"
 authors = ["tmdqja75 <tmdqja75@gmail.com>"]
 readme = "README.md"
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -24,6 +25,7 @@ langchain-huggingface = "^0.1.0"
 faiss-cpu = "^1.9.0"
 langchain-ollama = "^0.2.0"
 tavily-python = "^0.5.0"
+duckduckgo-search = "^6.3.7"
 
 
 [tool.poetry.group.dev.dependencies]
