@@ -1,10 +1,9 @@
 import getpass
-import os
-import sys
 
+
+from app.vectorstore.opensearch_hybrid import OpenSearchHybridSearch
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_core.tools import tool
-from app.vectorstore.opensearch_hybrid import OpenSearchHybridSearch
 
 # tool에 필요한 class 초기화
 duckduckgo_search = DuckDuckGoSearchRun()
