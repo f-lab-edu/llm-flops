@@ -1,20 +1,28 @@
+import logging
 import os
+from typing import List
+
 import bentoml
 import numpy as np
-import time
-
 import torch
 from dotenv import load_dotenv
-from typing import List
 from pydantic import BaseModel, Field
 
 load_dotenv()
+# Bentoml 서버 로깅 설정
+bentoml_logger = logging.getLogger("bentoml")
+bentoml_logger.setLevel(logging.INFO)
+
 
 class MultiStringInput(BaseModel):
-    sentences: List[str] = Field(description="List of multiple sentences to embed (in string type)")
+    sentences: List[str] = Field(
+        description="List of multiple sentences to embed (in string type)"
+    )
+
 
 class SingleStringInput(BaseModel):
     sentence: str = Field(description="A single sentences to embed (in string type)")
+
 
 @bentoml.service
 class SentenceEmbeddingService:
@@ -27,15 +35,15 @@ class SentenceEmbeddingService:
         # API 서버에 가용 가능한 GPU를 설정
         if torch.cuda.is_available():
             self.device = torch.device("cuda")
-            # bentoml_logger.info("Using CUDA for inference.")
+            bentoml_logger.info("Using CUDA for inference.")
 
         elif torch.backends.mps.is_available():
             self.device = torch.device("mps")
-            # bentoml_logger.info("Using MPS (Apple Silicon) for inference.")
+            bentoml_logger.info("Using MPS (Apple Silicon) for inference.")
         else:
             # 사용 가능한 GPU가 없다면 cpu로 inference 대체
             self.device = torch.device("cpu")
-            # bentoml_logger.info("Using CPU for inference.")
+            bentoml_logger.info("Using CPU for inference.")
 
         # bentofile.yaml에 env 변수를 참조하여 특정 모델을 초기화합니다
         self.embedding_model = SentenceTransformer(
