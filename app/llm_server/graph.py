@@ -10,7 +10,6 @@ from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel, Field
 
 from state import AgentState
-from utils.env_setup import get_device
 
 load_dotenv()
 # Bentoml 서버 로깅 설정
@@ -51,8 +50,8 @@ def check_relevance(
             - Deep Learning
             - Data Science
 
-        If the query contains keyword(s) or semantic meaning related to the give topics, grade it as relevant. \n
-        Respond in JSON with `is_relavant` key.
+        If the query contains keyword(s) or semantic meaning related to the given topics, grade it as relevant. \n
+        Respond in JSON with `is_related` key.
         Only return a binary score 'yes' or 'no' without further explanation."""
         ),
         HumanMessage(content=f"Here is the query: {query}"),
