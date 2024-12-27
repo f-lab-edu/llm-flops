@@ -38,7 +38,8 @@ def check_relevance(state: AgentState, model: BaseChatModel) -> Literal["agent",
     """질문(query)가 데이터 사이언스, ML/DL 토픽과 관련이 있는지 여부를 판단합니다.
 
     Args:
-        state: 그래프의 현재 상태가 담긴 AgenticState
+        state(AgentState): 그래프의 현재 상태가 담긴 AgenticState
+        model (BaseChatModel): bentoml API에서 받아오는 쿼리를 처리할 모델
 
     Returns:
         str: User가 입력한 query가 데이터 사이언스, ML/DL과 관련이 있는지 여부에 대한 결정
@@ -71,25 +72,32 @@ def check_relevance(state: AgentState, model: BaseChatModel) -> Literal["agent",
         return END
 
 
-def agent(state: AgentState, model: BaseChatModel):
-    """_summary_
+def agent(state: AgentState, model: BaseChatModel) -> dict:
+    """
+    에이전트 상태에서 user query를 불러와 모델을 사용하여 쿼리를 처리하고 응답을 반환합니다
 
     Args:
-        state (AgentState): _description_
-        model (BaseChatModel): _description_
+        state (AgentState): 그래프의 현재 상태가 담긴 AgenticState: "query" 에 user 질문을 포함
+        model (BaseChatModel): bentoml API에서 받아오는 쿼리를 처리할 모델
 
     Returns:
-        _type_: _description_
+        return_response (dict): 처리된 쿼리에 대해 어떤 tool을 사용할지에 대한 정보가 담긴 응답 메시지를 포함하는 dictionary
     """
+
     query = state["query"]
     model_with_tools = model.bind_tools(toolset)
     response = model_with_tools.invoke(query)
 
-    return {"messages": response}
+    return_response = {"messages": response}
+
+    return return_response
 
 
 def build_graph(model: BaseChatModel) -> CompiledStateGraph:
     """최종 graph build하는 함수
+
+    Args:
+        model (BaseChatModel): bentoml API에서 받아오는 쿼리를 처리할 모델입니다
 
     Returns:
         CompiledStateGraph: custom build한 nodes과 edges포함한 graph
