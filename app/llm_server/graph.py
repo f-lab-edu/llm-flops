@@ -38,7 +38,7 @@ def check_relevance(state: AgentState, model: BaseChatModel) -> Literal["agent",
     """질문(query)가 데이터 사이언스, ML/DL 토픽과 관련이 있는지 여부를 판단합니다.
 
     Args:
-        state(AgentState): 그래프의 현재 상태가 담긴 AgenticState
+        state(AgentState): 그래프의 현재 상태가 담긴 AgentState
         model (BaseChatModel): bentoml API에서 받아오는 쿼리를 처리할 모델
 
     Returns:
