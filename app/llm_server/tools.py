@@ -1,13 +1,19 @@
 import getpass
+import os
 
-from app.vectorstore.opensearch_hybrid import OpenSearchHybridSearch
+from dotenv import load_dotenv
 from langchain_community.tools import DuckDuckGoSearchRun
 from langchain_core.tools import tool
+
+from vectorstore.opensearch_hybrid import OpenSearchHybridSearch
+
+load_dotenv()
 
 # tool에 필요한 class 초기화
 duckduckgo_search = DuckDuckGoSearchRun()
 
-opensearch_password = getpass.getpass("Enter your Opensearch password: ")
+# opensearch_password = getpass.getpass("Enter your Opensearch password: ")
+opensearch_password = os.getenv("OPENSEARCH_INITIAL_ADMIN_PASSWORD")
 opensearch = OpenSearchHybridSearch(user="admin", pw=opensearch_password)
 
 @tool(parse_docstring=True)

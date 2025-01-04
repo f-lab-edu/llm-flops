@@ -4,8 +4,11 @@ cd app/llm_server
 
 BENTO_TAG=$(bentoml build --platform linux --output tag)
 BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" |  grep "__tag__:" | cut -d':' -f2-)
+REPOSITORY_NAME=$(echo "$BENTO_CONTAINER_TAG" | cut -d':' -f1)
+
 echo "------------------"
 echo $BENTO_CONTAINER_TAG
+echo $REPOSITORY_NAME
 echo "------------------"
 
 # system이 MacOS인지 확인합니다
@@ -22,4 +25,4 @@ else
     bentoml containerize $BENTO_CONTAINER_TAG
 fi
 
-
+docker tag $BENTO_CONTAINER_TAG $REPOSITORY_NAME:latest

@@ -3,14 +3,23 @@ labels:
   owner: sb-ha
   project: llm-mlops
 include:
-  - service.py
+  - "*.py"
+  - "vectorstore/*.py"
 python:
   packages:
-    - transformers
-    - python-dotenv
-    - torch
-    - langchain-openai
-    - langchain-huggingface
+    - "transformers>=4.47.1"
+    - "python-dotenv>=1.0.1"
+    - "torch>=2.0.1"
+    - "langchain>=0.3.2"
+    - "langchain-core>=0.3.29"
+    - "langchain-openai>=0.2.12"
+    - "langchain-huggingface>=0.1.0"
+    - "langchain-community>=0.3.1"
+    - "langchainhub>=0.1.21"
+    - "langgraph>=0.2.34"
+    - "opensearch-py>=2.7.1"
+    - "pandas>=2.2.3"
+    - "duckduckgo-search>=7.1.1"
 envs:
   - name: "LLM_MODEL"
     value: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
@@ -20,3 +29,14 @@ envs:
     value: True
   - name: "OPENAI_MODEL"
     value: "gpt-4o-mini"
+  - name: "MAX_ITERATION"
+    value: 3
+  - name: OPENSEARCH_HOST
+    value: "localhost"
+  - name: OPENSEARCH_PORT
+    value: "9200"
+  - name: OPENSEARCH_BLOG_DATA_INDEX
+    value: "test_blog"
+  - name: HUGGINGFACE_EMBEDDING_MODEL
+    value: "sentence-transformers/all-MiniLM-L6-v2"
+  

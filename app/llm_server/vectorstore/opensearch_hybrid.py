@@ -5,12 +5,11 @@ from typing import List
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 from langchain.docstore.document import Document
+from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import OpenSearchVectorSearch
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_openai import OpenAIEmbeddings
 from opensearchpy import OpenSearch, RequestsHttpConnection
-
-from langchain_community.document_loaders import WebBaseLoader
 
 load_dotenv()
 
