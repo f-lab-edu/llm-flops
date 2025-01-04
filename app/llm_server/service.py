@@ -1,5 +1,6 @@
 import logging
 import os
+from http import HTTPStatus
 
 import bentoml
 from bentoml.exceptions import InvalidArgument, NotFound
@@ -80,11 +81,8 @@ class LlmService:
         prompt = params.prompt
 
         inputs = {"query": prompt}
-        for output in self.graph.stream(inputs):
-            for key, value in output.items():
-                bentoml_logger.info(f"Output from node '{key}':")
-                bentoml_logger.info("---")
-                bentoml_logger.info(value)
-            bentoml_logger.info("\n---\n")
+        final_state = self.graph.invoke(inputs)
 
-        return {"success": True}
+        result = final_state["final_response"][0].content
+
+        return {"status": HTTPStatus.OK, "response": result}

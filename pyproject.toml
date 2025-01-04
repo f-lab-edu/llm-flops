@@ -31,7 +31,7 @@ bentoml = "^1.3.16"
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
 langchain-openai = "^0.2.12"
-duckduckgo-search = "5.3.1b1"
+duckduckgo-search = "^7.1.1"
 
 [build-system]
 requires = ["poetry-core"]

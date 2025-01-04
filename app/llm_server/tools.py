@@ -12,7 +12,7 @@ opensearch = OpenSearchHybridSearch(user="admin", pw=opensearch_password)
 
 @tool(parse_docstring=True)
 def web_search(query: str):
-    """A tool to use when websearch is needed. Use this tool when there isn't enough information in OpenSearch vector store Database
+    """A tool to use when websearch is needed. Use this tool when you need detailed research about the query or when you need current event information.
 
     Args:
         query : a query to websearch
