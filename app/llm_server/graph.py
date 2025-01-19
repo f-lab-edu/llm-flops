@@ -121,15 +121,12 @@ def grade_document(
                  그렇지 않으면 'increment_iteration'로 이동하여 state의 반복 횟수(num_iteration)를 증가시킵니다.
     """
     bentoml_logger.info("====grade_document====")
-    print(state)
     bentoml_logger.info("Grading the document...")
 
     query = state["query"]
     docs = state["messages"][-1].content
     num_iteration = state["num_iteration"]
-
-    print("num_iteration: ", num_iteration)
-
+    
     messages = [
         SystemMessage(
             content="""Please assess the given documents and determine whether they are relevant to the user query. \n
@@ -304,5 +301,4 @@ def build_graph(model: BaseChatModel) -> CompiledStateGraph:
     with open("langgraph_diagram.png", "wb") as file:
         file.write(png_data)
 
-    print("LangGraph diagram saved as langgraph_diagram.png")
     return graph

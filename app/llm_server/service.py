@@ -86,4 +86,4 @@ class LlmService:
 
         result = final_state["final_response"][0].content
 
-        return {"status": HTTPStatus.OK, "response": result}
+        return {"response": result}

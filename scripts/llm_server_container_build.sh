@@ -3,7 +3,7 @@
 cd app/llm_server
 
 BENTO_TAG=$(bentoml build --platform linux --output tag)
-BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" |  grep "__tag__:" | cut -d':' -f2-)
+BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" | grep "__tag__" | sed -n 's/^__tag__:\(.*\)/\1/p')
 REPOSITORY_NAME=$(echo "$BENTO_CONTAINER_TAG" | cut -d':' -f1)
 
 echo "------------------"
