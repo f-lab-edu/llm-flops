@@ -39,7 +39,7 @@
 ## 🚧 Installation Guide
 
 ### 환경설정
-1. Poetry를 설치한 후, 프로젝트 메인 디렉토리에서 (`llm-mlops/`) poetry install로 환경설정을 합니다
+1. [poetry document](https://python-poetry.org/docs/1.8/)를 참조하여`poetry==1.8.3`을 설치한 후, 프로젝트 메인 디렉토리에서 (`llm-mlops/`) poetry install로 환경설정을 합니다
 
 ### Opensearch 구성
 1. OpenSearch admin 비밀번호를 구성합니다
