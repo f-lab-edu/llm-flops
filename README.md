@@ -60,7 +60,7 @@ docker compose -f app/llm_server/vectorstore/docker-compose.yaml up -d
 export OPENAI_API_KEY={openai_api_key}
 ```
 
-2. bash script로 embedding 서버와 LLM 앱 API docker images를 build합니다.
+2. bash script로 embedding 서버와 LLM 앱 API docker image를 build합니다.
 
 ```bash
 bash script/bento_build.sh
