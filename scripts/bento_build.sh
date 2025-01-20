@@ -2,11 +2,11 @@
 
 cd app/embedding_server
 
-BENTO_TAG=$(bentoml build --output tag)
-BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" | awk -F':' '{print $2":"$3}')
+BENTO_TAG=$(bentoml build --platform linux --output tag)
+BENTO_CONTAINER_TAG=$(echo "$BENTO_TAG" | grep "__tag__" | sed -n 's/^__tag__:\(.*\)/\1/p')
 REPOSITORY_NAME=$(echo "$BENTO_CONTAINER_TAG" | cut -d':' -f1)
 echo $REPOSITORY_NAME
-
+echo $BENTO_CONTAINER_TAG
 # system이 MacOS인지 확인합니다
 if [[ "$(uname)" == "Darwin" ]]; then
     # Apple Silicon에서 돌고 있는지 확인합니다
@@ -22,6 +22,3 @@ else
 fi
 
 docker tag $BENTO_CONTAINER_TAG $REPOSITORY_NAME:latest
-
-
-

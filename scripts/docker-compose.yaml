@@ -1,0 +1,25 @@
+services:
+  sentence_embedding_service:
+    image: sentence_embedding_service:latest
+    ports:
+      - "3001:3000"
+    command: serve
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/livez"]
+      interval: 60s
+      timeout: 5s
+      retries: 5
+
+  llm_service:
+    image: llm_service:latest
+    ports:
+      - "3000:3000"
+    command: serve
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    depends_on:
+      sentence_embedding_service:
+        condition: service_healthy
+    restart: always

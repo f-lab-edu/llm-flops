@@ -1,5 +1,6 @@
 import logging
 import os
+from http import HTTPStatus
 
 import bentoml
 from bentoml.exceptions import InvalidArgument, NotFound
@@ -72,19 +73,17 @@ class LlmService:
 
         Args:
             prompt (str): 사용자의 입력 prompt
-            temperature (float): LLM모델 답변의 무작위성 조정 파라미터 (0~1 사이)
 
         Returns:
-            str: LLM으로 생성된 prompt에 대한 답변
+            dict: response status가 담긴 dictionary
+                - status: HTTP status
+                - response: LLM으로 생성된 prompt에 대한 답변
         """
         prompt = params.prompt
 
         inputs = {"query": prompt}
-        for output in self.graph.stream(inputs):
-            for key, value in output.items():
-                bentoml_logger.info(f"Output from node '{key}':")
-                bentoml_logger.info("---")
-                bentoml_logger.info(value)
-            bentoml_logger.info("\n---\n")
+        final_state = self.graph.invoke(inputs)
 
-        return {"success": True}
+        result = final_state["final_response"][0].content
+
+        return {"response": result}
