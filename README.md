@@ -72,7 +72,7 @@ bash script/llm_server_container_build.sh
 docker compose -f script/docker-compose.yaml up -d
 ```
 
-4. `localhost:3000`을 접속해서 Swagger UI로 API를 테스팅하거나 `curl`로  LLM API 앱이 잘 작동되는지 확인합니다.
+4. `localhost:3000`을 접속해서 Swagger UI로 API를 테스트하거나 `curl`로  LLM API 앱이 잘 작동되는지 확인합니다.
 ```bash
 curl -X 'POST' \
   'http://localhost:3000/generate' \
